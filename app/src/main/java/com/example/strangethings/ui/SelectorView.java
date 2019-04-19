@@ -3,22 +3,34 @@ package com.example.strangethings.ui;
 import android.content.Context;
 import android.graphics.Rect;
 import android.util.AttributeSet;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import com.example.strangethings.mvp.Model;
 
-public class CustomVerticalLayout extends ViewGroup {
+import java.util.List;
+
+public class SelectorView extends ViewGroup {
+
+    public void setVariants(Context context, List<Model.Variant> variants, ThingsAdapter.Notification clickNotification) {
+        LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+
+        for (Model.Variant variant : variants) {
+            Button button = new Button(context);
+            button.setLayoutParams(layoutParams);
+            button.setText(variant.text());
+            button.setOnClickListener(view -> clickNotification.show(variant));
+            addView(button);
+        }
+    }
 
     private Rect childRect = new Rect();
-    private Rect gravityChildRect = new Rect();
 
-    private static final String TAG = "CustomVerticalLayout";
-
-    public CustomVerticalLayout(Context context) {
+    public SelectorView(Context context) {
         this(context, null);
     }
 
-    public CustomVerticalLayout(Context context, AttributeSet attrs) {
+    public SelectorView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
@@ -87,7 +99,7 @@ public class CustomVerticalLayout extends ViewGroup {
 
             topPos = childRect.bottom + lp.bottomMargin;
 
-            child.layout(gravityChildRect.left, gravityChildRect.top, gravityChildRect.right, gravityChildRect.bottom);
+            child.layout(childRect.left, childRect.top, childRect.right, childRect.bottom);
         }
     }
 
@@ -97,7 +109,7 @@ public class CustomVerticalLayout extends ViewGroup {
 
     @Override
     public LayoutParams generateLayoutParams(AttributeSet attrs) {
-        return new CustomVerticalLayout.LayoutParams(getContext(), attrs);
+        return new SelectorView.LayoutParams(getContext(), attrs);
     }
 
     @Override
@@ -114,7 +126,6 @@ public class CustomVerticalLayout extends ViewGroup {
     protected boolean checkLayoutParams(ViewGroup.LayoutParams p) {
         return p instanceof LayoutParams;
     }
-
 
     public static class LayoutParams extends MarginLayoutParams {
 

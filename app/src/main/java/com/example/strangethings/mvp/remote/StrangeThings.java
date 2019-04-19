@@ -10,14 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public abstract class Things {
+public class StrangeThings {
 
-    private static final String TAG = "Things";
+    private static final String TAG = "StrangeThings";
 
-    public static final int TEXT_THING = 0;
-    public static final int PICTURE_THING = 1;
-    public static final int SELECTOR_THING = 2;
-    private static final int VARIANT_THING = 3;
+    private static StrangeThings strangeThings;
 
     private static final String TEXT_ITEM = "hz";
     private static final String PICTURE_ITEM = "picture";
@@ -27,11 +24,61 @@ public abstract class Things {
     private PictureThing pictureThing;
     private SelectorThing selectorThing;
 
-    private List<Integer> views;
+    private StrangeThings() {
+    }
 
-    public Things(String jsonString) throws JSONException {
+    static StrangeThings instance() {
+        if (strangeThings == null) {
+            strangeThings = new StrangeThings();
+        }
+        return strangeThings;
+    }
 
-        views = new ArrayList<>();
+    private static String sTextThingInfo = "Text: %s";
+    private static String sPictureThingInfo = "Picture text: %s";
+    private static String sSelectorFormatString = "Selector ID: %d, variants count: %d";
+    private static String sVariantFormatString = "Variant ID: %d, text: %s";
+
+    /**
+     * Sets an output format string. It shows when you select an item.
+     *
+     * @param format format string. Default value: "Text: %s"
+     */
+    public static void textThingInfoOutput(String format) {
+        sTextThingInfo = format;
+    }
+
+    /**
+     * Sets an output format string. It shows when you select an item.
+     *
+     * @param format format string. Default value: "Picture text: %s"
+     */
+    public static void pictureThingInfoOutput(String format) {
+        sPictureThingInfo = format;
+    }
+
+    /**
+     * Sets an output format string. It shows when you select an item.
+     *
+     * @param format format string. Default value: "Selector ID: %d, variants count: %d"
+     */
+    public static void selectorThingInfoOutput(String format) {
+        sSelectorFormatString = format;
+    }
+
+    /**
+     * Sets an output format string. It shows when you select an item.
+     *
+     * @param format format string. Default value: "Variant ID: %d, text: %s"
+     */
+    public static void variantThingInfoOutput(String format) {
+        sVariantFormatString = format;
+    }
+
+
+    List<Model.Thing> make(String jsonString) throws JSONException {
+
+        List<Model.Thing> things = new ArrayList<>();
 
         JSONObject jsonBody = new JSONObject(jsonString);
         JSONArray items = jsonBody.getJSONArray("data");
@@ -64,16 +111,18 @@ public abstract class Things {
             String name = items.getString(i).toLowerCase();
             switch (name) {
                 case TEXT_ITEM:
-                    views.add(TEXT_THING);
+                    things.add(new TextThing(textThing));
                     break;
                 case PICTURE_ITEM:
-                    views.add(PICTURE_THING);
+                    things.add(new PictureThing(pictureThing));
                     break;
                 case SELECTOR_ITEM:
-                    views.add(SELECTOR_THING);
+                    things.add(new SelectorThing(selectorThing));
                     break;
             }
         }
+
+        return things;
     }
 
     private TextThing textThing(JSONObject object) throws JSONException {
@@ -91,7 +140,7 @@ public abstract class Things {
 
     private SelectorThing selectorThing(JSONObject object) throws JSONException {
         JSONObject data = object.getJSONObject("data");
-        int selectedId = data.getInt("selectorId");
+        int selectedId = data.getInt("selectedId");
 
         JSONArray items = data.getJSONArray("variants");
         List<Model.Variant> variants = new ArrayList<>();
@@ -109,18 +158,22 @@ public abstract class Things {
 
         private String mText;
 
-        public TextThing(String text) {
+        TextThing(String text) {
             mText = text;
+        }
+
+        TextThing(TextThing textThing) {
+            mText = textThing.mText;
         }
 
         @Override
         public int name() {
-            return TEXT_THING;
+            return Model.TEXT_THING;
         }
 
         @Override
         public String info() {
-            return "Text: " + mText;
+            return String.format(Locale.getDefault(), sTextThingInfo, mText);
         }
 
         @Override
@@ -134,19 +187,24 @@ public abstract class Things {
         private String mUrl;
         private String mText;
 
-        public PictureThing(String url, String text) {
+        PictureThing(String url, String text) {
             mUrl = url;
             mText = text;
         }
 
+        PictureThing(PictureThing pictureThing) {
+            mUrl = pictureThing.mUrl;
+            mText = pictureThing.mText;
+        }
+
         @Override
         public int name() {
-            return PICTURE_THING;
+            return Model.PICTURE_THING;
         }
 
         @Override
         public String info() {
-            return "Picture text:" + mText;
+            return String.format(Locale.getDefault(), sPictureThingInfo, mText);
         }
 
         @Override
@@ -165,20 +223,24 @@ public abstract class Things {
         private int mSelectorId;
         private List<Model.Variant> mVariants;
 
-        public SelectorThing(int id, List<Model.Variant> variants) {
+        SelectorThing(int id, List<Model.Variant> variants) {
             mSelectorId = id;
             mVariants = variants;
         }
 
+        SelectorThing(SelectorThing selectorThing) {
+            mSelectorId = selectorThing.mSelectorId;
+            mVariants = new ArrayList<>(selectorThing.mVariants);
+        }
+
         @Override
         public int name() {
-            return SELECTOR_THING;
+            return Model.SELECTOR_THING;
         }
 
         @Override
         public String info() {
-            return String.format(Locale.getDefault(),
-                    "Selector ID: %d, variants count: %d", mSelectorId, variants().size());
+            return String.format(Locale.getDefault(), sSelectorFormatString, mSelectorId, variants().size());
         }
 
         @Override
@@ -204,12 +266,12 @@ public abstract class Things {
 
         @Override
         public int name() {
-            return VARIANT_THING;
+            return Model.SELECTOR_SUBTHING;
         }
 
         @Override
         public String info() {
-            return null;
+            return String.format(Locale.getDefault(), sVariantFormatString, mId, mText);
         }
 
         @Override

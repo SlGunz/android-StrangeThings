@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Strange Things</string>
+    <string name="image_description">Image Thing</string>
+
+    <string name="textThingFormatString">Текст: %s</string>
+    <string name="pictureThingFormatString">Текст с картинкой: %s</string>
+    <string name="selectorThingFormatString">ID селектора: %d, количество варинатов: %d"</string>
+    <string name="variantThingFormatString">ID варианта: %d, текст: %s</string>
+</resources>
