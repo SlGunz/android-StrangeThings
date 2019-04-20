@@ -18,6 +18,9 @@ public abstract class Model {
         String info();
     }
 
+    /**
+     * TextThing - class represents Text item model.
+     */
     public static class TextThing implements Thing {
 
         private String mText;
@@ -45,6 +48,9 @@ public abstract class Model {
         }
     }
 
+    /**
+     * PictureThing - class represents item model with picture and title.
+     */
     public static class PictureThing implements Thing {
 
         private String mUrl;
@@ -79,6 +85,9 @@ public abstract class Model {
         }
     }
 
+    /**
+     * SelectorThing - class represents item model with VariantId and sub-items.
+     */
     public static class SelectorThing implements Thing {
 
         private int mSelectorId;
@@ -113,6 +122,9 @@ public abstract class Model {
         }
     }
 
+    /**
+     * Variant - sub-item of {@link SelectorThing} class
+     */
     public static class Variant implements Thing {
 
         private int mId;

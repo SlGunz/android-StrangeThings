@@ -48,7 +48,7 @@ public class StrangeService {
             ResponseBody responseBody = response.body();
             if (responseBody != null) {
                 String jsonString = responseBody.string();
-                return StrangeThings.instance().make(jsonString);
+                return StrangeFactory.instance().make(jsonString);
             }
         } catch (JSONException e) {
             e.printStackTrace();

@@ -10,11 +10,14 @@ import java.util.List;
 
 import static com.example.strangethings.mvp.Model.*;
 
-class StrangeThings {
+/**
+ * Get JSON file and provide List of variables
+ */
+class StrangeFactory {
 
-    private static final String TAG = "StrangeThings";
+    private static final String TAG = "StrangeFactory";
 
-    private static StrangeThings strangeThings;
+    private static StrangeFactory strangeFactory;
 
     private static final String TEXT_ITEM = "hz";
     private static final String PICTURE_ITEM = "picture";
@@ -24,14 +27,14 @@ class StrangeThings {
     private PictureThing pictureThing;
     private SelectorThing selectorThing;
 
-    private StrangeThings() {
+    private StrangeFactory() {
     }
 
-    static StrangeThings instance() {
-        if (strangeThings == null) {
-            strangeThings = new StrangeThings();
+    static StrangeFactory instance() {
+        if (strangeFactory == null) {
+            strangeFactory = new StrangeFactory();
         }
-        return strangeThings;
+        return strangeFactory;
     }
 
     List<Thing> make(String jsonString) throws JSONException {

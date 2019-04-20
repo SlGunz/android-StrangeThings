@@ -83,6 +83,9 @@ public class ThingsAdapter extends RecyclerView.Adapter<ThingsAdapter.ThingViewH
     // ViewHolders
     ///////////////////////////////////////////////////////////////////////////
 
+    /**
+     * Base class that implement common ListItem functions.
+     */
     abstract static class ThingViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         Notification clickNotification;
@@ -105,6 +108,9 @@ public class ThingsAdapter extends RecyclerView.Adapter<ThingsAdapter.ThingViewH
         }
     }
 
+    /**
+     * This class represents Text ListItem
+     */
     static class TextViewHolder extends ThingViewHolder {
 
         private TextView textView;
@@ -121,6 +127,9 @@ public class ThingsAdapter extends RecyclerView.Adapter<ThingsAdapter.ThingViewH
         }
     }
 
+    /**
+     * This class represents Picture ListItem with text
+     */
     static class PictureViewHolder extends ThingViewHolder {
 
         ImageView imageView;
@@ -141,6 +150,9 @@ public class ThingsAdapter extends RecyclerView.Adapter<ThingsAdapter.ThingViewH
         }
     }
 
+    /**
+     * This class represents ListItem with buttons
+     */
     static class SelectorViewHolder extends ThingViewHolder {
 
         SelectorView selectorView;
