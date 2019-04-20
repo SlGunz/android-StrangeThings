@@ -10,7 +10,6 @@ import com.example.strangethings.R;
 import com.example.strangethings.mvp.Model;
 import com.example.strangethings.mvp.Presenter;
 import com.example.strangethings.mvp.View;
-import com.example.strangethings.mvp.remote.StrangeThings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,10 +26,10 @@ public class MainActivity extends MvpAppCompatActivity implements View {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        StrangeThings.textThingInfoOutput(getResources().getString(R.string.textThingFormatString));
-        StrangeThings.pictureThingInfoOutput(getResources().getString(R.string.pictureThingFormatString));
-        StrangeThings.selectorThingInfoOutput(getResources().getString(R.string.selectorThingFormatString));
-        StrangeThings.variantThingInfoOutput(getResources().getString(R.string.variantThingFormatString));
+        Model.textThingInfoOutput(getResources().getString(R.string.textThingFormatString));
+        Model.pictureThingInfoOutput(getResources().getString(R.string.pictureThingFormatString));
+        Model.selectorThingInfoOutput(getResources().getString(R.string.selectorThingFormatString));
+        Model.variantThingInfoOutput(getResources().getString(R.string.variantThingFormatString));
 
         thingsAdapter = new ThingsAdapter(new ArrayList<>());
         thingsAdapter.notificator(presenter::selectedElement);
